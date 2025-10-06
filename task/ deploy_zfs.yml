@@ -1,0 +1,11 @@
+---
+- name: zfs | Copy zfs files
+  copy:
+    src: "zfs/"
+    dest: "{{ hostvars[inventory_hostname]['zfs_dest'] }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    directory_mode: "0755"
+    force: "yes"
+  diff: "false"
