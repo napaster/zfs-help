@@ -1,0 +1,43 @@
+---
+- name: zfs | Copy zfs files
+  copy:
+    src: "zfs/"
+    dest:  "{{ hostvars[inventory_hostname]['zfs_dest'] }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    directory_mode: "0755"
+    force: "yes"
+- name: zfs | Create symlinks for scan_finish-zabbix.sh in /etc/zfs/zed.d
+  ansible.builtin.file:
+    src: "{{ hostvars[inventory_hostname]['zfs_dest'] + '/scan_finish-zabbix.sh' }}"  
+    dest: "{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - "/etc/zfs/zed.d/scrub_finish-zabbix.sh"
+    - "/etc/zfs/zed.d/resilver_finish-zabbix.sh"
+  become: yes
+  notify:
+  - "Restart zfs-zed"
+- name: sudoers | Copy sudoers files
+  copy:
+    src: "sudoers/"
+    dest:  "{{ hostvars[inventory_hostname]['zfs_sudo'] }}"
+    owner: "root"
+    group: "root"
+    mode: "0440"
+    directory_mode: "0755"
+    force: "yes"
+  diff: "false"
+- name: zfs-zed | Enable zfs-zed service
+  ansible.builtin.systemd:
+    name: "{{ hostvars[inventory_hostname]['zfs_zed_service'] }}"
+    enabled: "yes"
+  when:
+    - "hostvars[inventory_hostname]['zfs'] |
+       community.general.json_query(vars['zfs_enabled']) is defined"
+    - "hostvars[inventory_hostname]['zfs'] |
+       community.general.json_query(vars['zfs_enabled']) == 'true'"
+  vars:
+    zfs_enabled: "[] | map(&enabled || 'false', @) | [0]"

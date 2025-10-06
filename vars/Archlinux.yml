@@ -1,2 +1,4 @@
 ---
-zfs_dest: '/usr/lib/zfs/zed.d'
+zfs_dest: /usr/lib/zfs/zed.d
+zfs_sudo: /etc/sudoers.d
+zfs_zed_service: 'zfs-zed.service'

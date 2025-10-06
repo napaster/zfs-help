@@ -1,0 +1,18 @@
+---
+- name: zfs-zed | Assert that system manager is systemd
+  ansible.builtin.assert:
+    that:
+      - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
+    msg: "System manager is not systemd."
+    quiet: "true"
+- name: "frr | Add the OS specific varibles"
+  ansible.builtin.include_vars:
+    file: "{{ hostvars[inventory_hostname]['ansible_os_family'] + '.yml' }}"
+- ansible.builtin.include_tasks:
+    file: "deploy_zfs.yml"
+  when:
+    - hostvars[inventory_hostname]['zfs'] is defined
+    - hostvars[inventory_hostname]['zfs'] !=  ''
+- name: "Scan Defaults | Import 'scan_defaults' tasks"
+  ansible.builtin.include_tasks:
+    file: "scan_defaults.yml"

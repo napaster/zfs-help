@@ -1,0 +1,15 @@
+---
+- name: Restart zfs-zed
+  ansible.builtin.systemd:
+    name: "{{ hostvars[inventory_hostname]['zfs_zed_service'] }}"
+    daemon_reload: "yes"
+    state: "restarted"
+  when:
+    - "hostvars[inventory_hostname]['zfs'] is defined"
+    - "hostvars[inventory_hostname]['zfs'] != ''"
+    - "hostvars[inventory_hostname]['zfs'] |
+       community.general.json_query(vars['zfs_restart']) is defined"
+    - "hostvars[inventory_hostname]['zfs'] |
+       community.general.json_query(vars['zfs_restart']) == 'true'"
+  vars:
+    zfs_restart: "[] | map(&restart || 'false', @) | [0]"
