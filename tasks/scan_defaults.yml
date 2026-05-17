@@ -2,8 +2,11 @@
 - name: zfs | Execute set-zfs-scan-defaults.sh script
   ansible.builtin.shell: "{{ hostvars[inventory_hostname]['zfs_dest'] }}/set-zfs-scan-defaults.sh"
   args:
-    executable: /bin/bash  # Указываем интерпретатор, если скрипт требует bash
-  become: yes  # Если нужны root-права
-  when: zfs is defined and zfs | length > 0 and zfs[0].enabled == 'true'  # Условие из вашей роли
-  register: script_output  # Опционально для отладки
-  failed_when: script_output.rc != 0  # Опционально
+    executable: /bin/bash
+  become: yes
+  when:
+    - zfs_help is defined
+    - zfs_help | length > 0
+    - zfs_help[0].enabled == 'true'
+  register: script_output
+  failed_when: script_output.rc != 0

@@ -10,15 +10,15 @@ Additionally, for monitoring of scrub and resilver stats you must install the ZE
 
 ## Extra
 
-The role support array of options for `zfs[].settings`. Options is not
+The role support array of options for `zfs_help[].settings`. Options is not
 validate and pass as-is. For all possible options please consult with
 
 ## Example configuration
 
 ```yaml
 ---
-zfs:
+zfs_help:
 # Enable deploy or not (default is 'false').
-  - setings: 'true'
+  - settings: 'true'
     enabled: 'true'
     restart: 'true'

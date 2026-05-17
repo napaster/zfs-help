@@ -35,9 +35,9 @@
     name: "{{ hostvars[inventory_hostname]['zfs_zed_service'] }}"
     enabled: "yes"
   when:
-    - "hostvars[inventory_hostname]['zfs'] |
+    - "hostvars[inventory_hostname]['zfs_help'] |
        community.general.json_query(vars['zfs_enabled']) is defined"
-    - "hostvars[inventory_hostname]['zfs'] |
+    - "hostvars[inventory_hostname]['zfs_help'] |
        community.general.json_query(vars['zfs_enabled']) == 'true'"
   vars:
     zfs_enabled: "[] | map(&enabled || 'false', @) | [0]"

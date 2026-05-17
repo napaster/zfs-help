@@ -5,14 +5,14 @@
       - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
     msg: "System manager is not systemd."
     quiet: "true"
-- name: "frr | Add the OS specific varibles"
+- name: "zfs-help | Add the OS specific variables"
   ansible.builtin.include_vars:
     file: "{{ hostvars[inventory_hostname]['ansible_os_family'] + '.yml' }}"
 - ansible.builtin.include_tasks:
     file: "deploy_zfs.yml"
   when:
-    - hostvars[inventory_hostname]['zfs'] is defined
-    - hostvars[inventory_hostname]['zfs'] !=  ''
+    - hostvars[inventory_hostname]['zfs_help'] is defined
+    - hostvars[inventory_hostname]['zfs_help'] !=  ''
 - name: "Scan Defaults | Import 'scan_defaults' tasks"
   ansible.builtin.include_tasks:
     file: "scan_defaults.yml"
